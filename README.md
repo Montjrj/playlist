@@ -4,110 +4,47 @@ In this guided practice, we'll use Express to create a simple API that serves in
 
 ## Getting Started
 
-1. Create a new repository using this one as a template.
-2. Clone down your repository and run `npm install` to install the dependencies.
-3. Start the development server with `npm run dev`.
+1. Clone this repository down and run `npm install` to install the dependencies.
+2. Run `npm test` to see the test cases, which should all fail at first.
+3. Work through the guided practice to pass all of the tests.
 
-## Setting Up Express
+> [!NOTE]
+>
+> We are using Vitest to test your code and have set it to bail after the first test case
+> fails. If you would like to see all of the failed test cases at once, you can remove
+> the `--bail 1` option from the `test` script in `package.json`.
 
-1. In `server.js`, import the `"express"` package and call it to create the Express app.
-   <details>
-   <summary>See solution</summary>
+## Set up Express app
 
-   ```js
-   const express = require("express");
-   const app = express();
-   ```
+Write code according to the following instructions while keeping an eye on your terminal,
+where Vitest should be running.
 
-   </details>
+1. In `app.js`, import the `"express"` package as `express` and call it to create the Express app.
+2. Export the created app as the default export.
+3. In `server.js`, import your app.
 
-2. Initialize a `PORT` variable to 3000, which is a common default port that local servers listen on.
-   <details>
-   <summary>See solution</summary>
+> [!TIP]
+>
+> The "imports" field in `package.json` allows you to use aliases when importing
+> your own project files. The one defined for you allows you to use the `#` symbol
+> to represent the project root, so you don't have to deal with relative paths.
+>
+> For example, if you have a file `foo/bar/baz.js`, you can import it from any file:\
+> `import baz from "#foo/bar/baz;`
 
-   ```js
-   const PORT = 3000;
-   ```
+4. Initialize a `PORT` variable to 3000, which is a common default port that local servers listen on.
+5. Tell the app to listen on `PORT`. A corresponding status message should be logged to the console.
+6. In a separate terminal, run `npm start`. You should see your message! You can press
+   `Control C` to quit the server.
 
-   </details>
+## Write middleware to handle API endpoints
 
-3. Write middleware to handle the `GET /` endpoint. It should respond with the message `"You've reached the Playlist API!"`.
-   <details>
-   <summary>See solution</summary>
+Now that your app is up and running, let's define some endpoints! This code should live in
+`app.js` unless otherwise specified.
 
-   ```js
-   app.get("/", (req, res) => {
-     res.send("You've reached the Playlist API!");
-   });
-   ```
-
-   </details>
-
-4. Tell the app to listen on `PORT`. A corresponding status message should be logged to the console, which you should see if your development server is running.
-   <details>
-   <summary>See solution</summary>
-
-   ```js
-   app.listen(PORT, () => {
-     console.log(`Listening on port ${PORT}.`);
-   });
-   ```
-
-   </details>
-
-5. Use the REST Client Extension to test the `GET /` endpoint in `playlist.http`. If you've done everything correctly, the server should respond with the correct message!
-
-## Serving Playlist
-
-1. An array of songs has already been initialized in `playlist.js`. At the bottom of that file, add a line to export that array.
-   <details>
-   <summary>See solution</summary>
-
-   ```js
-   module.exports = playlist;
-   ```
-
-   </details>
-
-2. Back in `server.js`, import that array using `require`. Now that our server has access to this data, we can use it in our responses.
-   <details>
-   <summary>See solution</summary>
-
-   ```js
-   const playlist = require("./playlist");
-   ```
-
-   </details>
-
-3. Write middleware to handle the `GET /playlist` endpoint. It should respond with the `playlist` array as JSON. Use `playlist.http` to test this endpoint.
-   <details>
-   <summary>See solution</summary>
-
-   ```js
-   app.get("/playlist", (req, res) => {
-     res.json(playlist);
-   });
-   ```
-
-   </details>
-
-4. Write middleware to handle the `GET /playlist/:index` endpoint. It should respond with the song at the given `index` of the `playlist` array. If the index is invalid, it should send the message `"That song does not exist in the playlist."` with status code 404. Use `playlist.http` to test this endpoint.
-   <details>
-   <summary>See solution</summary>
-
-   ```js
-   app.get("/playlist/:index", (req, res) => {
-     const { index } = req.params;
-     if (index < 0 || index >= playlist.length) {
-       res.status(404).send("That song does not exist in the playlist.");
-     } else {
-       res.json(playlist[index]);
-     }
-   });
-   ```
-
-   </details>
-
-## Solution
-
-To view the full solution, switch over to the `solution` branch of this starter repository.
+7. `GET /` should respond with the message `"You've reached the Playlist API!"`.
+8. An array of songs has already been initialized in `db/playlist.js`. At the bottom of that file, add a line to export that array as the default export.
+9. Back in `app.js`, import that array so we can use that data in our responses.
+10. `GET /playlist` should send the `playlist` array as a response.
+11. `GET /playlist/:index` should respond with the song at the given `index` of the `playlist` array.
+    - If the index is invalid, it should send the message `"That song does not exist in the playlist."` with status code 404.
